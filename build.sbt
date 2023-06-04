@@ -1,13 +1,11 @@
-scalaVersion := "2.12.8"
+scalaVersion := "2.12.17"
 
 name := "svfa-scala"
 organization := "br.unb.cic"
 
 version := "0.1.0-SNAPSHOT"
 
-
-
-githubOwner := "rbonifacio"
+githubOwner := "delanoerhardt"
 githubRepository := "svfa-scala"
 githubTokenSource := TokenSource.GitConfig("github.token")
 
@@ -17,13 +15,21 @@ resolvers += "soot snapshots" at "https://soot-build.cs.uni-paderborn.de/nexus/r
 
 resolvers += "soot releases" at "https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-release/"
 
-resolvers += "Local maven repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
+resolvers += "Local maven repository" at "file://" + Path.userHome.absolutePath + "/.m2/repository"
 
 resolvers += Classpaths.typesafeReleases
 
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.6.0"
 
-libraryDependencies += "ca.mcgill.sable" % "soot" % "3.3.0"
+libraryDependencies += "org.soot-oss" % "sootup.core" % "1.1.0"
+// TODO precisa importar o resto das libs ou é automático?
+// libraryDependencies += "org.soot-oss:sootup.core:1.1.0"
+// libraryDependencies += "org.soot-oss:sootup.java.core:1.1.0"
+// libraryDependencies += "org.soot-oss:sootup.java.sourcecode:1.1.0"
+// libraryDependencies += "org.soot-oss:sootup.java.bytecode:1.1.0"
+// libraryDependencies += "org.soot-oss:sootup.jimple.parser:1.1.0"
+// libraryDependencies += "org.soot-oss:sootup.callgraph:1.1.0"
+// libraryDependencies += "org.soot-oss:sootup.analysis:1.1.0"
 libraryDependencies += "com.google.guava" % "guava" % "27.1-jre"
 libraryDependencies += "org.scala-graph" %% "graph-core" % "1.13.0"
 
