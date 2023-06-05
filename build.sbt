@@ -21,15 +21,14 @@ resolvers += Classpaths.typesafeReleases
 
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.6.0"
 
-libraryDependencies += "org.soot-oss" % "sootup.core" % "1.1.0"
-// TODO precisa importar o resto das libs ou é automático?
-// libraryDependencies += "org.soot-oss:sootup.core:1.1.0"
-// libraryDependencies += "org.soot-oss:sootup.java.core:1.1.0"
-// libraryDependencies += "org.soot-oss:sootup.java.sourcecode:1.1.0"
-// libraryDependencies += "org.soot-oss:sootup.java.bytecode:1.1.0"
-// libraryDependencies += "org.soot-oss:sootup.jimple.parser:1.1.0"
-// libraryDependencies += "org.soot-oss:sootup.callgraph:1.1.0"
-// libraryDependencies += "org.soot-oss:sootup.analysis:1.1.0"
+libraryDependencies += "org.soot-oss" % "sootup.core" % "1.0.0"
+libraryDependencies += "org.soot-oss" % "sootup.java.core" % "1.0.0"
+libraryDependencies += "org.soot-oss" % "sootup.java.sourcecode" % "1.0.0"
+libraryDependencies += "org.soot-oss" % "sootup.java.bytecode" % "1.0.0"
+libraryDependencies += "org.soot-oss" % "sootup.jimple.parser" % "1.0.0"
+libraryDependencies += "org.soot-oss" % "sootup.callgraph" % "1.0.0"
+libraryDependencies += "org.soot-oss" % "sootup.analysis" % "1.0.0"
+
 libraryDependencies += "com.google.guava" % "guava" % "27.1-jre"
 libraryDependencies += "org.scala-graph" %% "graph-core" % "1.13.0"
 
