@@ -1,26 +1,24 @@
 package br.unb.cic.soot.svfa.jimple
 
-import soot._
+import sootup.core.jimple.common.stmt.Stmt
+import sootup.core.jimple.common.stmt.JAssignStmt
+import sootup.core.jimple.common.stmt.JInvokeStmt
+import sootup.core.jimple.basic.Value
 
-import soot._
+abstract class Statement(val base: Stmt){}
 
-abstract class Statement(val base: Unit){}
-
-case class AssignStmt(b: Unit) extends Statement(b) {
-  val stmt = base.asInstanceOf[soot.jimple.AssignStmt]
+case class AssignStmt(b: JAssignStmt[Value, Value]) extends Statement(b) {
+  val stmt = b
 }
-case class InvokeStmt(b: Unit) extends Statement(b) {
-  val stmt = base.asInstanceOf[soot.jimple.InvokeStmt]
+case class InvokeStmt(b: Stmt) extends Statement(b) {
+  val stmt = base.asInstanceOf[JInvokeStmt]
 }
-case class InvalidStmt(b: Unit) extends Statement(b)
+case class InvalidStmt(b: Stmt) extends Statement(b)
 
 object Statement {
-  def convert(base: Unit): Statement =
-    if(base.isInstanceOf[soot.jimple.AssignStmt]) {
-      AssignStmt(base)
-    }
-    else if(base.isInstanceOf[soot.jimple.InvokeStmt]) {
-      InvokeStmt(base)
-    }
-    else InvalidStmt(base)
+  def convert(base: Stmt): Statement = base match {
+    case base: JAssignStmt[Value, Value] => AssignStmt(base)
+    case base: JInvokeStmt => InvokeStmt(base)
+    case _ => InvalidStmt(base)
+  }
 }

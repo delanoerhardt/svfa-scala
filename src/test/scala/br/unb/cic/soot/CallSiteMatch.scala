@@ -2,7 +2,7 @@ package br.unb.cic.soot
 
 import br.unb.cic.soot.graph.{NodeType, SimpleNode, SinkNode, SourceNode}
 import org.scalatest.FunSuite
-import soot.jimple.{AssignStmt, InvokeExpr, InvokeStmt}
+import sootup.jimple.{AssignStmt, InvokeExpr, InvokeStmt}
 
 class CallSiteMatch(var className: String = "", var mainMethod: String = "") extends JSVFATest {
   override def getClassName(): String = className
