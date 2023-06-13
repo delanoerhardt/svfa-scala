@@ -1,9 +1,10 @@
 package br.unb.cic.soot.graph
 
 import scalax.collection.edge.LkDiEdge
-import soot.SootMethod
+import sootup.core.model.SootMethod
 
 import scala.collection.immutable.HashSet
+import sootup.core.jimple.common.stmt.Stmt
 
 /*
   * This trait define the base type for node classifications.
@@ -24,8 +25,8 @@ trait GraphNode {
   type T
   val value: T
   val nodeType: NodeType
-  def unit(): soot.Unit
-  def method(): soot.SootMethod
+  def unit(): Stmt
+  def method(): SootMethod
   def show(): String
 }
 
@@ -42,7 +43,7 @@ trait LambdaNode extends scala.AnyRef {
   * it is enough for the analysis, but for some situations, something
   * specific for Jimple or Shimple abstractions can be a better option.
   */
-case class Statement(className: String, method: String, stmt: String, line: Int, sootUnit: soot.Unit = null, sootMethod: soot.SootMethod = null)
+case class Statement(className: String, method: String, stmt: String, line: Int, sootUnit: Stmt = null, sootMethod: SootMethod = null)
 
 /*
  * A graph node defined using the GraphNode abstraction specific for statements.
@@ -72,7 +73,7 @@ case class StatementNode(value: Statement, nodeType: NodeType) extends GraphNode
 
   override def hashCode(): Int = 2 * value.hashCode() + nodeType.hashCode()
 
-  override def unit(): soot.Unit = value.sootUnit
+  override def unit(): Stmt = value.sootUnit
 
   override def method(): SootMethod = value.sootMethod
 }
@@ -445,9 +446,9 @@ class Graph() {
   /*
  * creates a graph node from a sootMethod / sootUnit
  */
-  def createNode(method: SootMethod, stmt: soot.Unit, f: (soot.Unit) => NodeType): StatementNode =
-    StatementNode(br.unb.cic.soot.graph.Statement(method.getDeclaringClass.toString, method.getSignature, stmt.toString,
-      stmt.getJavaSourceStartLineNumber, stmt, method), f(stmt))
+  def createNode(method: SootMethod, stmt: Stmt, f: (Stmt) => NodeType): StatementNode =
+    StatementNode(br.unb.cic.soot.graph.Statement(method.getDeclaringClassType.toString, method.getSignature.toString, stmt.toString,
+      stmt.getPositionInfo.getStmtPosition.getFirstLine, stmt, method), f(stmt))
 
   def reportConflicts(): scala.collection.Set[String] =
     findConflictingPaths().map(p => p.toString)
