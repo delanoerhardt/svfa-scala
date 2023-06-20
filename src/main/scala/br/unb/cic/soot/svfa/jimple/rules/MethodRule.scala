@@ -1,8 +1,9 @@
 package br.unb.cic.soot.svfa.jimple.rules
 
-import soot.SootMethod
-import soot.jimple.Stmt
-import soot.toolkits.scalar.SimpleLocalDefs
+import sootup.core.model.SootMethod
+import sootup.core.jimple.common.stmt.Stmt
+
+import br.unb.cic.soot.svfa.LocalDefsHolder._
 
 
 /**
@@ -11,7 +12,7 @@ import soot.toolkits.scalar.SimpleLocalDefs
  * apply that takes a soot method, an statement (with an
  * invoke expression), and a list of local definitions.
  */
-trait RuleAction extends ((SootMethod, Stmt, SimpleLocalDefs) => Unit)
+trait RuleAction extends ((SootMethod, Stmt, LocalDefs) => Unit)
 
 /**
  * A list composition of rule actions.
@@ -19,7 +20,7 @@ trait RuleAction extends ((SootMethod, Stmt, SimpleLocalDefs) => Unit)
 trait ComposedRuleAction extends RuleAction {
   def actions: List[RuleAction]
 
-  override def apply(sootMethod: SootMethod, stmt: Stmt, localDefs: SimpleLocalDefs): Unit = {
+  override def apply(sootMethod: SootMethod, stmt: Stmt, localDefs: LocalDefs): Unit = {
     actions.foreach(action => action.apply(sootMethod, stmt, localDefs))
   }
 }
@@ -34,8 +35,8 @@ trait ComposedRuleAction extends RuleAction {
 abstract class MethodRule extends RuleAction  {
   def check(sootMethod: SootMethod) : Boolean
 
-  def run(sootMethod: SootMethod, invokeStmt: Stmt, localDefs: SimpleLocalDefs): Unit = {
-    if(check(invokeStmt.getInvokeExpr.getMethod)) {
+  def run(sootMethod: SootMethod, invokeStmt: Stmt, localDefs: LocalDefs): Unit = {
+    if(check(invokeStmt.getInvokeExpr.getMethodSignature.getClass)) {
       apply(sootMethod, invokeStmt, localDefs)
     }
   }
@@ -48,7 +49,7 @@ abstract class MethodRule extends RuleAction  {
  */
 abstract class NamedMethodRule(className: String, methodName: String) extends MethodRule {
   override def check(sootMethod: SootMethod): Boolean =
-    sootMethod.getDeclaringClass.getName == className && sootMethod.getName == methodName
+    sootMethod.getDeclaringClassType.getClassName == className && sootMethod.getName == methodName
 }
 
 /**
@@ -62,12 +63,13 @@ abstract class NativeRule() extends MethodRule {
  * Rule for methods without active body
  */
 abstract class MissingActiveBodyRule() extends MethodRule {
-  override def check(sootMethod: SootMethod): Boolean = sootMethod.isPhantom || (!sootMethod.hasActiveBody && sootMethod.getSource == null)
+  override def check(sootMethod: SootMethod): Boolean =
+    !sootMethod.hasBody && sootMethod.getBodySource == null
 }
 
 /**
  * An action that does not execute anything
  */
 trait DoNothing extends RuleAction {
-  def apply(sootMethod: SootMethod, invokeStmt: Stmt, localDefs: SimpleLocalDefs) = { }
+  def apply(sootMethod: SootMethod, invokeStmt: Stmt, localDefs: LocalDefs) = { }
 }

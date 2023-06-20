@@ -1,7 +1,12 @@
 package br.unb.cic.soot.svfa
 
+// Update
+// import soot._
+import java.nio.file.Paths
+import sootup.java.core.language.JavaLanguage
+import sootup.java.sourcecode.inputlocation.JavaSourcePathAnalysisInputLocation
+import sootup.java.core.JavaProject
 
-import soot._
 
 /**
  * Base class for all implementations
@@ -15,8 +20,20 @@ abstract class SVFA extends SootConfiguration {
     configureSoot()
     beforeGraphConstruction()
     val (pack, t) = createSceneTransform()
-    PackManager.v().getPack(pack).add(t)
-    configurePackages().foreach(p => PackManager.v().getPack(p).apply())
+    
+    val pathToBinary = Paths.get("")
+    val inputLocation = new JavaSourcePathAnalysisInputLocation(pathToBinary.toString());
+
+    val language = new JavaLanguage(9)
+
+    val project = JavaProject.builder(language).addInputLocation(inputLocation).build();
+
+    val view = project.createView()
+
+    val classType = project.getIdentifierFactory().getClassType("example.HelloWorld");
+
+    // PackManager.v().getPack(pack).add(t)
+    // configurePackages().foreach(p => PackManager.v().getPack(p).apply())
     afterGraphConstruction()
   }
 
