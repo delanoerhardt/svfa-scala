@@ -4,6 +4,7 @@ import br.unb.cic.soot.JSVFATest
 import br.unb.cic.soot.graph.{NodeType, SimpleNode}
 import org.scalatest.FunSuite
 import br.unb.cic.soot.svfa.jimple.dsl.LanguageParser
+import sootup.core.jimple.common.stmt.Stmt
 
 class ParserTestSuite extends FunSuite {
     var simpleCode =
@@ -129,7 +130,7 @@ class ParserTestSuite extends FunSuite {
 
             override def getMainMethod(): String = ""
 
-            override def analyze(unit: soot.Unit): NodeType = SimpleNode
+            override def analyze(stmt: Stmt): NodeType = SimpleNode
         })
 
         val tokens = parser.apply(code)
@@ -152,7 +153,7 @@ class ParserTestSuite extends FunSuite {
 
             override def getMainMethod(): String = ""
 
-            override def analyze(unit: soot.Unit): NodeType = SimpleNode
+            override def analyze(stmt: Stmt): NodeType = SimpleNode
         })
 
         val tokens = parser.apply(defaultRules)

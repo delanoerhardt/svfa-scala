@@ -2,7 +2,9 @@ package br.unb.cic.flowdroid
 
 import br.unb.cic.soot.graph.{NodeType, _}
 import org.scalatest.FunSuite
-import soot.jimple.{AssignStmt, InvokeExpr, InvokeStmt}
+import sootup.core.jimple.basic.Value
+import sootup.core.jimple.common.expr.AbstractInvokeExpr
+import sootup.core.jimple.common.stmt.{JAssignStmt, JInvokeStmt, Stmt}
 
 class BasicTest(var className: String = "", var mainMethod: String = "") extends FlowdroidSpec {
   override def getClassName(): String = className
@@ -11,28 +13,28 @@ class BasicTest(var className: String = "", var mainMethod: String = "") extends
 
   override def runInFullSparsenessMode() = false
 
-  override def analyze(unit: soot.Unit): NodeType = {
+  override def analyze(unit: Stmt): NodeType = {
     unit match {
-      case invokeStmt: InvokeStmt =>
-        return analyzeInvokeStmt(invokeStmt.getInvokeExpr)
-      case assignStmt: AssignStmt =>
+      case invokeStmt: JInvokeStmt =>
+        analyzeInvokeStmt(invokeStmt.getInvokeExpr)
+      case assignStmt: JAssignStmt[Value, Value] =>
         assignStmt.getRightOp match {
-          case invokeStmt: InvokeExpr =>
-            return analyzeInvokeStmt(invokeStmt)
+          case invokeStmt: AbstractInvokeExpr =>
+            analyzeInvokeStmt(invokeStmt)
           case _ =>
-            return SimpleNode
+            SimpleNode
         }
-      case _ => return SimpleNode
+      case _ => SimpleNode
     }
   }
 
-  def analyzeInvokeStmt(exp: InvokeExpr): NodeType = {
-    if (sourceList.contains(exp.getMethod.getSignature)) {
+  def analyzeInvokeStmt(exp: AbstractInvokeExpr): NodeType = {
+    if (sourceList.contains(exp.getMethodSignature.toString)) {
       return SourceNode;
-    } else if (sinkList.contains(exp.getMethod.getSignature)) {
+    } else if (sinkList.contains(exp.getMethodSignature.toString)) {
       return SinkNode;
     }
-    return SimpleNode;
+    SimpleNode;
   }
 }
 

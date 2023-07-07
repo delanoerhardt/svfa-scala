@@ -2,8 +2,10 @@ package br.unb.cic.soot
 
 import br.unb.cic.soot.graph.{NodeType, _}
 import org.scalatest.{BeforeAndAfter, FunSuite}
-import soot.jimple.{AssignStmt, InvokeExpr, InvokeStmt}
 
+import sootup.core.jimple.basic.Value
+import sootup.core.jimple.common.expr.AbstractInvokeExpr
+import sootup.core.jimple.common.stmt.{JAssignStmt, JInvokeStmt, Stmt}
 class FieldSampleTest(var className: String = "", var mainMethod: String = "") extends JSVFATest {
   override def getClassName(): String = className
 
@@ -11,13 +13,13 @@ class FieldSampleTest(var className: String = "", var mainMethod: String = "") e
 
   override def runInFullSparsenessMode() = false
 
-  override def analyze(unit: soot.Unit): NodeType = {
+  override def analyze(unit: Stmt): NodeType = {
     unit match {
-      case invokeStmt: InvokeStmt =>
+      case invokeStmt: JInvokeStmt =>
         return analyzeInvokeStmt(invokeStmt.getInvokeExpr)
-      case assignStmt: AssignStmt =>
+      case assignStmt: JAssignStmt[Value, Value] =>
         assignStmt.getRightOp match {
-          case invokeStmt: InvokeExpr =>
+          case invokeStmt: AbstractInvokeExpr =>
             return analyzeInvokeStmt(invokeStmt)
           case _ =>
             return SimpleNode
@@ -26,8 +28,8 @@ class FieldSampleTest(var className: String = "", var mainMethod: String = "") e
     }
   }
 
-  def analyzeInvokeStmt(exp: InvokeExpr): NodeType = {
-    exp.getMethod.getName match {
+  def analyzeInvokeStmt(exp: AbstractInvokeExpr): NodeType = {
+    exp.getMethodSignature.getName match {
       case "source" => SourceNode
       case "sink" => SinkNode
       case _ => SimpleNode

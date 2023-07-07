@@ -2,8 +2,6 @@ package br.unb.cic.graph
 
 import br.unb.cic.soot.graph.{SimpleNode, SinkNode, SourceNode, Statement, StatementNode}
 import org.scalatest.FunSuite
-import soot.Scene
-import soot.jimple.Jimple
 
 class NewScalaGraphTest extends FunSuite {
 

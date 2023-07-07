@@ -1,31 +1,35 @@
 package br.unb.cic.soot
 
 import br.unb.cic.soot.graph.{NodeType, SimpleNode, SinkNode, SourceNode}
-import org.scalatest.{BeforeAndAfter, FunSuite}
-import soot.jimple.{AssignStmt, InvokeExpr, InvokeStmt}
+import sootup.core.jimple.basic.Value
+import sootup.core.jimple.common.expr.AbstractInvokeExpr
+import sootup.core.jimple.common.stmt.{JAssignStmt, JInvokeStmt, Stmt}
 
 class ArrayCopyTest extends JSVFATest {
 
   override def getClassName(): String = "samples.ArrayCopySample"
   override def getMainMethod(): String = "main"
 
-  override def analyze(unit: soot.Unit): NodeType = {
-    if(unit.isInstanceOf[InvokeStmt]) {
-      val invokeStmt = unit.asInstanceOf[InvokeStmt]
-      return analyzeInvokeStmt(invokeStmt.getInvokeExpr)
+  override def analyze(unit: Stmt): NodeType = {
+    unit match {
+      case invokeStmt: JInvokeStmt =>
+        return analyzeInvokeStmt(invokeStmt.getInvokeExpr)
+      case _ =>
     }
-    if(unit.isInstanceOf[soot.jimple.AssignStmt]) {
-      val assignStmt = unit.asInstanceOf[AssignStmt]
-      if(assignStmt.getRightOp.isInstanceOf[InvokeExpr]) {
-        val invokeStmt = assignStmt.getRightOp.asInstanceOf[InvokeExpr]
-        return analyzeInvokeStmt(invokeStmt)
-      }
+    unit match {
+      case assignStmt: JAssignStmt[Value, Value] =>
+        assignStmt.getRightOp match {
+          case invokeStmt: AbstractInvokeExpr =>
+            return analyzeInvokeStmt(invokeStmt)
+          case _ =>
+        }
+      case _ =>
     }
     return SimpleNode
   }
 
-  def analyzeInvokeStmt(exp: InvokeExpr) : NodeType =
-    exp.getMethod.getName match {
+  def analyzeInvokeStmt(exp: AbstractInvokeExpr) : NodeType =
+    exp.getMethodSignature.getName match {
       case "source" => SourceNode
       case "sink"   => SinkNode
       case _        => SimpleNode
