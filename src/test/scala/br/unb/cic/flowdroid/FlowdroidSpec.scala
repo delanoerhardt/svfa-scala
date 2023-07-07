@@ -1,11 +1,6 @@
 package br.unb.cic.flowdroid
 
 import br.unb.cic.soot.JSVFATest
-import br.unb.cic.soot.graph.{SinkNode, SourceNode}
-import soot.{G, Scene}
-import soot.options.Options
-
-import scala.collection.JavaConverters._
 
 abstract class FlowdroidSpec extends JSVFATest {
   val sinkList = List(

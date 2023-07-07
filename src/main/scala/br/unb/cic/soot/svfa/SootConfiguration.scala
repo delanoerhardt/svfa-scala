@@ -1,17 +1,8 @@
 package br.unb.cic.soot.svfa
 
-import scala.collection.JavaConverters._
-
-import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
-
-import sootup.core.inputlocation.AnalysisInputLocation
-import sootup.java.core.language.JavaLanguage
-import sootup.java.sourcecode.inputlocation.JavaSourcePathAnalysisInputLocation
-import sootup.java.core.JavaProject
 import sootup.core.model.SootMethod
 
+import java.io.File
 
 sealed trait CG 
 
@@ -35,8 +26,6 @@ abstract class SootConfiguration {
 
   def getIncludeList(): List[String]
 
-  def createSceneTransform(): (String, Any)
-
   def configurePackages(): List[String] = List("cg", "wjtp")
 
   def beforeGraphConstruction(): scala.Unit = {}
@@ -45,8 +34,7 @@ abstract class SootConfiguration {
 
   def callGraph(): CG = SPARK
 
-  def configureSoot() {
-  }
+  def configureSoot(): Unit = {}
 
   def pathToJCE(): String =
     System.getProperty("java.home") + File.separator + "lib" + File.separator + "jce.jar"

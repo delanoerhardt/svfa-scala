@@ -5,6 +5,7 @@ import br.unb.cic.soot.graph.{NodeType, SimpleNode}
 import br.unb.cic.soot.svfa.jimple.dsl.RuleFactory
 import br.unb.cic.soot.svfa.jimple.rules.{MethodRule, NativeRule}
 import org.scalatest.FunSuite
+import sootup.core.jimple.common.stmt.Stmt
 
 class RuleFactoryTest {
   val rule = new RuleFactory(new JSVFATest {
@@ -12,7 +13,7 @@ class RuleFactoryTest {
 
     override def getMainMethod(): String = ""
 
-    override def analyze(unit: soot.Unit): NodeType = SimpleNode
+    override def analyze(unit: Stmt): NodeType = SimpleNode
   })
 
   def apply(rule: String, actions: List[String]): MethodRule = {

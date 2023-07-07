@@ -2,10 +2,13 @@ package br.unb.cic.soot.svfa
 
 // Update
 // import soot._
+import sootup.callgraph.ClassHierarchyAnalysisAlgorithm
+
 import java.nio.file.Paths
 import sootup.java.core.language.JavaLanguage
 import sootup.java.sourcecode.inputlocation.JavaSourcePathAnalysisInputLocation
-import sootup.java.core.JavaProject
+import sootup.java.core.{JavaPackageName, JavaProject}
+import sootup.java.core.types.JavaClassType
 
 
 /**
@@ -19,8 +22,7 @@ abstract class SVFA extends SootConfiguration {
   def buildSparseValueFlowGraph() {
     configureSoot()
     beforeGraphConstruction()
-    val (pack, t) = createSceneTransform()
-    
+
     val pathToBinary = Paths.get("")
     val inputLocation = new JavaSourcePathAnalysisInputLocation(pathToBinary.toString());
 
@@ -32,9 +34,18 @@ abstract class SVFA extends SootConfiguration {
 
     val classType = project.getIdentifierFactory().getClassType("example.HelloWorld");
 
+    val sootClass = view.getClass(new JavaClassType("FieldSample", new JavaPackageName("samples")))
+
+    val cha = new ClassHierarchyAnalysisAlgorithm(view);
+
+    val cg = cha.initialize();
+
+    println(cg)
+
     // PackManager.v().getPack(pack).add(t)
     // configurePackages().foreach(p => PackManager.v().getPack(p).apply())
     afterGraphConstruction()
+
   }
 
   def svgToDotModel(): String = {

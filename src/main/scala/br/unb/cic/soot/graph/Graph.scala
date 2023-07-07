@@ -25,7 +25,7 @@ trait GraphNode {
   type T
   val value: T
   val nodeType: NodeType
-  def unit(): Stmt
+  def stmt(): Stmt
   def method(): SootMethod
   def show(): String
 }
@@ -73,7 +73,7 @@ case class StatementNode(value: Statement, nodeType: NodeType) extends GraphNode
 
   override def hashCode(): Int = 2 * value.hashCode() + nodeType.hashCode()
 
-  override def unit(): Stmt = value.sootUnit
+  override def stmt(): Stmt = value.sootUnit
 
   override def method(): SootMethod = value.sootMethod
 }

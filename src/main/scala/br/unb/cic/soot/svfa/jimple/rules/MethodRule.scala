@@ -36,9 +36,9 @@ abstract class MethodRule extends RuleAction  {
   def check(sootMethod: SootMethod) : Boolean
 
   def run(sootMethod: SootMethod, invokeStmt: Stmt, localDefs: LocalDefs): Unit = {
-    if(check(invokeStmt.getInvokeExpr.getMethodSignature.getClass)) {
-      apply(sootMethod, invokeStmt, localDefs)
-    }
+//    if(check(invokeStmt.getInvokeExpr.getMethodSignature.getClass)) {
+//      apply(sootMethod, invokeStmt, localDefs)
+//    }
   }
 }
 
