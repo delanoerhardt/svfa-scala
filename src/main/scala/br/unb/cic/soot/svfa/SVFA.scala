@@ -3,6 +3,7 @@ package br.unb.cic.soot.svfa
 // Update
 // import soot._
 import sootup.callgraph.ClassHierarchyAnalysisAlgorithm
+import sootup.java.bytecode.inputlocation.JavaClassPathAnalysisInputLocation
 
 import java.nio.file.Paths
 import sootup.java.core.language.JavaLanguage
@@ -23,18 +24,22 @@ abstract class SVFA extends SootConfiguration {
     configureSoot()
     beforeGraphConstruction()
 
-    val pathToBinary = Paths.get("")
-    val inputLocation = new JavaSourcePathAnalysisInputLocation(pathToBinary.toString());
+    val pathToBinary = Paths.get(Paths.get("").toAbsolutePath.toString, "/src/test/java")
+
+    val pathToLibs = new JavaClassPathAnalysisInputLocation(System.getProperty("java.home") + "/lib/rt.jar") //add rt.jar
+
+    val inputLocation = new JavaSourcePathAnalysisInputLocation(pathToBinary.toString())
+
 
     val language = new JavaLanguage(9)
 
-    val project = JavaProject.builder(language).addInputLocation(inputLocation).build();
+    val project = JavaProject.builder(language).addInputLocation(inputLocation).addInputLocation(pathToLibs).enableModules().build();
 
     val view = project.createView()
 
-    val classType = project.getIdentifierFactory().getClassType("example.HelloWorld");
+    val classType = project.getIdentifierFactory().getClassType("securibench.micro.aliasing.Aliasing1");
 
-    val sootClass = view.getClass(new JavaClassType("FieldSample", new JavaPackageName("samples")))
+    val sootClass = view.getClass(classType)
 
     val cha = new ClassHierarchyAnalysisAlgorithm(view);
 

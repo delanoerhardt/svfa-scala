@@ -35,3 +35,25 @@ This is a scala implementation of a framework that builds a sparse-value flow gr
 ## Dependencies
 
 This project use some of the [FlowDroid](https://github.com/secure-software-engineering/FlowDroid) test cases. The FlowDroid test cases in `src/test/java/securibench` are under [LGPL-2.1](https://github.com/secure-software-engineering/FlowDroid/blob/develop/LICENSE) license.
+
+### dex2jar
+
+There is an [open issue](https://github.com/soot-oss/SootUp/issues/669) due to dex2jar being flaky.
+This dependency is needed for _sootup.java.bytecode_ and gave me only a _slight_ panic attack.
+
+The only way I found to build this was:
+- Clone project https://github.com/ThexXTURBOXx/dex2jar
+- Checkout the tag needed (for sootup.java.bytecode 1.1.2 it was v61)
+- Run ``./gradlew publishToMavenLocal`` as is
+- Change build.gradle from dex2jar to
+ ```
+group = 'com.github.ThexXTURBOXx'
+version = 'v61'
+```
+- Run ``./gradlew publishToMavenLocal`` again
+- Navigate to where the package was deployed to the local maven cache, somewhere like `C:\Users\USERNAME\.m2\repository\com\github\ThexXTURBOXx`
+- Copy everything inside
+- Create a new folder called `dex2jar`
+- Paste everything inside this new folder.
+
+Yes, by the end of this process there should be 3 copies of the library.
