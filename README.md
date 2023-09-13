@@ -31,6 +31,12 @@ This is a scala implementation of a framework that builds a sparse-value flow gr
       * `sootClassPath()` to set up the soot classpath. This implementation must return a string
       * `analyze(unit)` to identify the type of a node  (source, sink, simple node) in the graph; given a statement (soot unit)
 
+## Running
+
+As per issue https://github.com/soot-oss/SootUp/issues/533, the source code frontend
+can't deal with any try-catches.
+To deal with this problem, the whole _java_ folder inside src/test was compiled with
+`javac -d out $(find . -name "*.java")` and then bundled into a .jar with `jar cf out.jar out`
 
 ## Dependencies
 

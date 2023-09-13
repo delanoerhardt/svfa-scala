@@ -10,13 +10,9 @@
  ******************************************************************************/
 package securibench.supportClasses;
 
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 import javax.servlet.*;
-import javax.servlet.descriptor.JspConfigDescriptor;
 
 public class DummyServletContext implements ServletContext {
     private final Map<String, String> mInitParameters = new HashMap<>();
